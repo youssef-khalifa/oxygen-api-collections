@@ -1,0 +1,2569 @@
+{
+  "info": {
+    "_postman_id": "9111de67-c821-4482-9c96-9ae52d30113e",
+    "name": "Oxygen Academy - Courses, Sections & Lessons API",
+    "description": "Complete API collection for Course management system with Sections, Lessons, and Media modules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-9111de67-c821-4482-9c96-9ae52d30113e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Media Module",
+      "item": [
+        {
+          "name": "Get Images",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media?category=audio&page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "audio"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Videos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media?category=videos&page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "videos"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Files",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/media?category=files&page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "files"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Courses Module",
+      "item": [
+        {
+          "name": "📋 Basic Retrieval",
+          "item": [
+            {
+              "name": "Get All Courses (Default)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses response structure valid\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.courses).to.be.an('array');",
+                      "    pm.expect(jsonData.data.pagination).to.be.an('object');",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Courses (Page 1, PageSize 10)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Pagination works correctly\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                      "    pm.expect(jsonData.data.pagination.pageSize).to.equal(10);",
+                      "    pm.expect(jsonData.data.courses.length).to.be.at.most(10);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?page=1&pageSize=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Courses (Page 2, PageSize 5)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Second page retrieved\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.pagination.currentPage).to.equal(2);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?page=2&pageSize=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "2"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Courses (With Include Count)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Include count returns total items\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                      "    pm.expect(jsonData.data.pagination.totalPages).to.be.a('number');",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?includeCount=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeCount",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Courses (With Enrollment Count)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Enrollment count is calculated\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course).to.have.property('enrolledAmount');",
+                      "        pm.expect(course.enrolledAmount).to.be.a('number');",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?includeEnrollmentCount=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeEnrollmentCount",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Courses (Without Enrollment Count - Default)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Response faster without enrollment count\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.courses).to.be.an('array');",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?includeEnrollmentCount=false",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeEnrollmentCount",
+                      "value": "false"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "🔎 Search Tests",
+          "item": [
+            {
+              "name": "Search by course title",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Search results contain matching text\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.title.toLowerCase()).to.include('english');",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?search=English",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "English"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search with no results",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Empty results returned for no matches\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.courses).to.be.an('array');",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?search=NonExistentCourse12345",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "NonExistentCourse12345"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search with pagination",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Search with pagination works\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                      "    pm.expect(jsonData.data.pagination.pageSize).to.equal(5);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?search=Level&page=1&pageSize=5",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "Level"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "🔤 Sort Tests",
+          "item": [
+            {
+              "name": "Sort by title ASC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by title ascending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(courses[i].title.localeCompare(courses[i-1].title)).to.be.at.least(0);",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=title&sortOrder=asc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "title"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by price ASC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by price ascending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(courses[i].price).to.be.at.least(courses[i-1].price);",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=price&sortOrder=asc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "price"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by price DESC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by price descending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(courses[i].price).to.be.at.most(courses[i-1].price);",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=price&sortOrder=desc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "price"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by createdAt ASC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by createdAt ascending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(new Date(courses[i].createdAt)).to.be.at.least(new Date(courses[i-1].createdAt));",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=createdAt&sortOrder=asc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by enrolledAmount DESC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by enrolledAmount descending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(courses[i].enrolledAmount).to.be.at.most(courses[i-1].enrolledAmount);",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=enrolledAmount&sortOrder=desc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "enrolledAmount"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by averageRating DESC",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Courses sorted by rating descending\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    for (var i = 1; i < Math.min(courses.length, 5); i++) {",
+                      "        pm.expect(courses[i].averageRating).to.be.at.most(courses[i-1].averageRating);",
+                      "    }",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=averageRating&sortOrder=desc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "averageRating"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "🔍 Filter Tests",
+          "item": [
+            {
+              "name": "Filter by language=en",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are English\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.language).to.equal('en');",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?language=en",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "en"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by language=es",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are Spanish\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.language).to.equal('es');",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?language=es",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "es"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by language=all",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All languages are returned\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.courses.length).to.be.greaterThan(0);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?language=all",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "language",
+                      "value": "all"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by level=A1",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are A1 level\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.level).to.equal('A1');",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?level=A1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "level",
+                      "value": "A1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by isAvailable=true",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are available\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.isAvailable).to.equal(true);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?isAvailable=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "isAvailable",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by isFeatured=true",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are featured\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.isFeatured).to.equal(true);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?isFeatured=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "isFeatured",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by isDiscounted=true",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are discounted\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.isDiscounted).to.equal(true);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?isDiscounted=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "isDiscounted",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by minPrice only",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are above minPrice\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.price).to.be.at.least(50);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?minPrice=50",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "minPrice",
+                      "value": "50"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by maxPrice only",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are below maxPrice\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.price).to.be.at.most(200);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?maxPrice=200",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "maxPrice",
+                      "value": "200"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by price range (minPrice and maxPrice)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All courses are within price range\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    jsonData.data.courses.forEach(function(course) {",
+                      "        pm.expect(course.price).to.be.at.least(50);",
+                      "        pm.expect(course.price).to.be.at.most(150);",
+                      "    });",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?minPrice=50&maxPrice=150",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "minPrice",
+                      "value": "50"
+                    },
+                    {
+                      "key": "maxPrice",
+                      "value": "150"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "🔗 Combined Tests",
+          "item": [
+            {
+              "name": "Sort by price DESC + Filter by language=en + Pagination",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Complex filter with sort and pagination\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    var courses = jsonData.data.courses;",
+                      "    ",
+                      "    // Check language filter",
+                      "    courses.forEach(function(course) {",
+                      "        pm.expect(course.language).to.equal('en');",
+                      "    });",
+                      "    ",
+                      "    // Check sorting",
+                      "    for (var i = 1; i < courses.length; i++) {",
+                      "        pm.expect(courses[i].price).to.be.at.most(courses[i-1].price);",
+                      "    }",
+                      "    ",
+                      "    // Check pagination",
+                      "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                      "    pm.expect(jsonData.data.pagination.pageSize).to.equal(10);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?sortBy=price&sortOrder=desc&language=en&page=1&pageSize=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "price"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "language",
+                      "value": "en"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search + Filter by level + Sort by title + Include enrollment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Multiple filters work together\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.courses).to.be.an('array');",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?search=Level&level=A1&sortBy=title&sortOrder=asc&includeEnrollmentCount=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "Level"
+                    },
+                    {
+                      "key": "level",
+                      "value": "A1"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "title"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "includeEnrollmentCount",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by price range + availability + Sort + Include count",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"All complex parameters work together\", function () {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/courses?minPrice=50&maxPrice=150&isAvailable=true&sortBy=enrolledAmount&sortOrder=desc&includeCount=true",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "courses"
+                  ],
+                  "query": [
+                    {
+                      "key": "minPrice",
+                      "value": "50"
+                    },
+                    {
+                      "key": "maxPrice",
+                      "value": "150"
+                    },
+                    {
+                      "key": "isAvailable",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "enrolledAmount"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "includeCount",
+                      "value": "true"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get All Courses - Basic",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courses/my",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all courses- list",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/courses/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "courses",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/courses/68fba466876dc69d8099a4ed",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "68fba466876dc69d8099a4ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get course by id -info",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courses/{{course_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "{{course_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course - With Media Files",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "اهلا اهلا",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Learn advanced Spanish with professional instructors",
+                  "type": "text"
+                },
+                {
+                  "key": "courseObjectives[]",
+                  "value": "Master conversational Spanish",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "language",
+                  "value": "es",
+                  "type": "text"
+                },
+                {
+                  "key": "level",
+                  "value": "B2",
+                  "type": "text"
+                },
+                {
+                  "key": "duration",
+                  "value": "45",
+                  "type": "text"
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "isFeatured",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "isDiscounted",
+                  "value": "false",
+                  "type": "text",
+                  "uuid": "408339c2-9d57-4896-9827-9971591879f9"
+                },
+                {
+                  "key": "featuredOrder",
+                  "value": "null",
+                  "type": "text",
+                  "uuid": "7e3753c4-8e97-4c6f-8dd4-e2c03589f681"
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "src": "/C:/Users/youssef kahlifa/Desktop/Screenshot 2025-09-06 022208.png"
+                },
+                {
+                  "key": "introVideo",
+                  "type": "file",
+                  "src": "/C:/Users/youssef kahlifa/Desktop/2025-09-18 03-44-54.mkv"
+                },
+                {
+                  "key": "resources",
+                  "type": "file",
+                  "uuid": "42cfb132-61b2-4cf7-8137-4a4e6ab70628",
+                  "src": "/C:/Users/youssef kahlifa/Desktop/New Text Document.txt"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course - With Existing Media IDs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Italian Language Basics دا عربي\",\n  \"description\": \"تعلم الإيطالية من الصفر مع دروس تفاعلية\",\n  \"courseObjectives\": [\"التحدث بالإيطالية الأساسية\", \"فهم الثقافة الإيطالية\"],\n  \"price\": 80,\n  \"language\": \"it\",\n  \"level\": \"A1\",\n  \"duration\": 30,\n  \"isAvailable\": true,\n  \"thumbnail\": \"690e222296c0179a16061280\",\n  \"introVideo\": \"690e222496c0179a16061282\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course - With Discount (Percentage)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": {\n    \"en\": \"German for Beginners\",\n    \"ar\": \"الألمانية للمبتدئين\"\n  },\n  \"description\": {\n    \"en\": \"Start your German journey with this comprehensive course\",\n    \"ar\": \"ابدأ رحلتك مع اللغة الألمانية\"\n  },\n  \"courseObjectives\": {\n    \"en\": [\"Basic German conversation\"],\n    \"ar\": [\"محادثة ألمانية أساسية\"]\n  },\n  \"thumbnail\": \"{{media_id}}\",\n  \"introVideo\": \"{{media_id}}\",\n  \"price\": 99,\n  \"language\": \"de\",\n  \"level\": \"A1\",\n  \"duration\": 40,\n  \"isAvailable\": true,\n  \"isFeatured\": false,\n  \"isDiscounted\": true,\n  \"discountPercentage\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Course - With Discount (Fixed Amount)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": {\n    \"en\": \"French Intermediate Level\",\n    \"ar\": \"الفرنسية المستوى المتوسط\"\n  },\n  \"description\": {\n    \"en\": \"Intermediate French for travelers and professionals\",\n    \"ar\": \"الفرنسية المتوسطة للمسافرين والمحترفين\"\n  },\n  \"courseObjectives\": {\n    \"en\": [\"Advanced conversations\"],\n    \"ar\": [\"محادثات متقدمة\"]\n  },\n  \"thumbnail\": \"{{media_id}}\",\n  \"introVideo\": \"{{media_id}}\",\n  \"price\": 120,\n  \"language\": \"fr\",\n  \"level\": \"B1\",\n  \"duration\": 50,\n  \"isAvailable\": true,\n  \"isFeatured\": true,\n  \"isDiscounted\": true,\n  \"discountPrice\": 99\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Course - Partial Update",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "uuid": "72f7baa3-715f-4238-afef-8db3f5fca736",
+                  "src": "/C:/Users/youssef kahlifa/Downloads/OA Logo V3 - Colored.png",
+                  "disabled": true
+                },
+                {
+                  "key": "introVideo",
+                  "type": "file",
+                  "uuid": "477384fe-202a-460f-8553-3a6a33bc2404",
+                  "src": "/C:/Users/youssef kahlifa/Downloads/Download.mp4",
+                  "disabled": true
+                },
+                {
+                  "key": "resources",
+                  "type": "file",
+                  "uuid": "cd775d27-d026-410e-940c-8f88cde5f754",
+                  "src": "/C:/Users/youssef kahlifa/Downloads/youssef khalifa cv de.docx",
+                  "disabled": true
+                },
+                {
+                  "key": "price",
+                  "value": "1500",
+                  "type": "text",
+                  "uuid": "debdc14a-41b7-4de8-9a57-e68aedf3355a"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/courses/{{course_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "{{course_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Course - Full Update with File",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title[en]",
+                  "value": "Updated Course Name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "title[ar]",
+                  "value": "اسم الدورة المحدث",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "description[en]",
+                  "value": "Updated description",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "description[ar]",
+                  "value": "الوصف المحدث",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "price",
+                  "value": "110",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "numberOfLessons",
+                  "value": "11",
+                  "type": "text",
+                  "uuid": "a0b839ec-e37e-4cc9-8b61-776ea9f23d81"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/courses/{{course_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "{{course_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/courses/{{course_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "courses",
+                "{{course_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter all progresses by courseId (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress?courseId={{course_id}}&page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress"
+              ],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "{{course_id}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Filter all progresses by specific course. Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sections Module",
+      "item": [
+        {
+          "name": "Get All Sections - list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sections?courseId=68fba466876dc69d8099a4ed",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections"
+              ],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "68fba466876dc69d8099a4ed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Sections - With Include Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sections?page=1&pageSize=20&includeCount=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Section By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sections/{{section_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections",
+                "{{section_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Section",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": {\n    \"en\": \"Module 1: Getting Started\",\n    \"ar\": \"الوحدة 1: البدء\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sections/course/{{course_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections",
+                "course",
+                "{{course_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Section",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": {\n    \"en\": \"Updated Section Title\",\n    \"ar\": \"عنوان القسم المحدث\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sections/{{section_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections",
+                "{{section_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Section",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sections/{{section_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sections",
+                "{{section_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lessons Module",
+      "item": [
+        {
+          "name": "Get All Lessons - Page 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lessons?sectionId=68fba466876dc69d8099a4f2&includeCount=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons"
+              ],
+              "query": [
+                {
+                  "key": "sectionId",
+                  "value": "68fba466876dc69d8099a4f2"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Lessons - With Include Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lessons?page=1&pageSize=20&includeCount=true",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lesson By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lessons/{{lesson_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "{{lesson_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - With Video File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title[en]",
+                  "value": "Introduction to the Course",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "title",
+                  "value": "مقدمة الدورة",
+                  "type": "text"
+                },
+                {
+                  "key": "duration",
+                  "value": "15.5",
+                  "type": "text"
+                },
+                {
+                  "key": "video",
+                  "type": "file",
+                  "src": "/C:/Users/youssef kahlifa/Downloads/2025-09-18-03-44-54-20251015-015024.mkv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/lessons/section/{{section_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "section",
+                "{{section_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - With Existing Video ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": {\n    \"en\": \"Vocabulary Building\",\n    \"ar\": \"بناء المفردات\"\n  },\n  \"duration\": 20.5,\n  \"video\": \"{{media_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lessons/section/{{section_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "section",
+                "{{section_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lesson - Metadata Only",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duration\": 25.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/lessons/{{lesson_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "{{lesson_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lesson - With New Video File",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title[en]",
+                  "value": "Updated Lesson Name\",",
+                  "type": "text"
+                },
+                {
+                  "key": "title[ar]",
+                  "value": "اسم الدرس المحدث",
+                  "type": "text"
+                },
+                {
+                  "key": "duration",
+                  "value": "30.0",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/lessons/{{lesson_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "{{lesson_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Lesson",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/lessons/{{lesson_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "lessons",
+                "{{lesson_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "your_admin_token_here",
+      "type": "string"
+    },
+    {
+      "key": "course_id",
+      "value": "your_course_id_here",
+      "type": "string"
+    },
+    {
+      "key": "section_id",
+      "value": "your_section_id_here",
+      "type": "string"
+    },
+    {
+      "key": "lesson_id",
+      "value": "your_lesson_id_here",
+      "type": "string"
+    },
+    {
+      "key": "media_id",
+      "value": "your_media_id_here",
+      "type": "string"
+    }
+  ]
+}

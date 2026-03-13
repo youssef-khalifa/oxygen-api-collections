@@ -1,0 +1,1909 @@
+{
+  "info": {
+    "_postman_id": "6a14bba3-539e-45a8-af28-75486e212acf",
+    "name": "Coupons Complete Test Suite v2",
+    "description": "Comprehensive test suite for the Coupons module including CRUD operations, sorting, filtering, pagination, and comprehensive validation scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-6a14bba3-539e-45a8-af28-75486e212acf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "📋 Basic Retrieval",
+      "item": [
+        {
+          "name": "Get All Coupons (Default)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons response structure valid\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.coupons).to.be.an('array');",
+                  "    pm.expect(jsonData.data.pagination).to.be.an('object');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Coupons (Page 1, PageSize 10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Pagination is correct\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                  "    pm.expect(jsonData.data.pagination.pageSize).to.equal(10);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?page=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Coupons (With Include Count)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Count information included\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                  "    pm.expect(jsonData.data.pagination.totalPages).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Coupons (Without Include Count)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Fast response without count\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.coupons).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?includeCount=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "includeCount",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Coupon By ID (Setup with coupon ID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Single coupon retrieved\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.coupon).to.be.an('object');",
+                  "    pm.expect(jsonData.data.coupon._id).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons/{{couponId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons",
+                "{{couponId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all coupons list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Coupons response structure valid\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.success).to.be.true;\r",
+                  "    pm.expect(jsonData.data.coupons).to.be.an('array');\r",
+                  "    pm.expect(jsonData.data.pagination).to.be.an('object');\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📝 CRUD Operations",
+      "item": [
+        {
+          "name": "Create Coupon (Percentage)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Percentage coupon created successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.coupon.name).to.equal('PERCENT50');",
+                  "    pm.expect(jsonData.data.coupon.discountType).to.equal('percentage');",
+                  "    pm.expect(jsonData.data.coupon.discountPercentage).to.equal(50);",
+                  "    pm.globals.set('couponIdPercent', jsonData.data.coupon._id);",
+                  "    pm.globals.set('couponNamePercent', jsonData.data.coupon.name);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PERCENT50\",\n  \"timesOfUse\": 100,\n  \"expirationDate\": \"2025-12-31T23:59:59.999Z\",\n  \"discountType\": \"percentage\",\n  \"discountPercentage\": 50,\n  \"courses\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coupons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Coupon (Flat Amount)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Flat amount coupon created successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.coupon.name).to.equal('FLAT100');",
+                  "    pm.expect(jsonData.data.coupon.discountType).to.equal('flat');",
+                  "    pm.expect(jsonData.data.coupon.discountFlatAmount).to.equal(100);",
+                  "    pm.globals.set('couponIdFlat', jsonData.data.coupon._id);",
+                  "    pm.globals.set('couponNameFlat', jsonData.data.coupon.name);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"FLAT100\",\n  \"timesOfUse\": 50,\n  \"expirationDate\": \"2025-12-31T23:59:59.999Z\",\n  \"discountType\": \"flat\",\n  \"discountFlatAmount\": 100,\n  \"courses\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coupons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Coupon",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupon updated successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.coupon.timesOfUse).to.equal(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"timesOfUse\": 200\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coupons/{{couponIdPercent}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons",
+                "{{couponIdPercent}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Coupon",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupon deleted successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons/{{couponIdFlat}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons",
+                "{{couponIdFlat}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔤 Sort Tests",
+      "item": [
+        {
+          "name": "Sort by name ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by name ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].name.localeCompare(coupons[i-1].name)).to.be.at.least(0);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=name&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "name"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by name DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by name descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].name.localeCompare(coupons[i-1].name)).to.be.at.most(0);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=name&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "name"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by createdAt ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by createdAt ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(new Date(coupons[i].createdAt)).to.be.at.least(new Date(coupons[i-1].createdAt));",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=createdAt&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by createdAt DESC (Default)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by createdAt descending (newest first)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(new Date(coupons[i].createdAt)).to.be.at.most(new Date(coupons[i-1].createdAt));",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=createdAt&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by timesOfUse ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by timesOfUse ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].timesOfUse).to.be.at.least(coupons[i-1].timesOfUse);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=timesOfUse&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "timesOfUse"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by timesOfUse DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by times of use descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].timesOfUse).to.be.at.most(coupons[i-1].timesOfUse);",
+                  "    }",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=timesOfUse&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "timesOfUse"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by applicableCoursesCount ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by applicable courses count ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].applicableCoursesCount).to.be.at.least(coupons[i-1].applicableCoursesCount);",
+                  "    }",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=applicableCoursesCount&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "applicableCoursesCount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by applicableCoursesCount DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by applicable courses count descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].applicableCoursesCount).to.be.at.most(coupons[i-1].applicableCoursesCount);",
+                  "    }",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=applicableCoursesCount&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "applicableCoursesCount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by expirationDate DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by expiration date descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    for (var i = 1; i < coupons.length; i++) {",
+                  "        pm.expect(new Date(coupons[i].expirationDate)).to.be.at.most(new Date(coupons[i-1].expirationDate));",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=expirationDate&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "expirationDate"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by discountAmount ASC (Grouped: % then $)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by discount amount ascending (percentages first, then flats)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    ",
+                  "    // Verify all coupons have applicableCoursesCount",
+                  "    coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.a('number');",
+                  "    });",
+                  "    ",
+                  "    // Find the split point between percentage and flat coupons",
+                  "    var percentageCount = 0;",
+                  "    for (var i = 0; i < coupons.length; i++) {",
+                  "        if (coupons[i].discountType === 'percentage') {",
+                  "            percentageCount++;",
+                  "        } else {",
+                  "            break;",
+                  "        }",
+                  "    }",
+                  "    ",
+                  "    // Verify percentages are sorted correctly",
+                  "    for (var i = 1; i < percentageCount; i++) {",
+                  "        pm.expect(coupons[i].discountPercentage).to.be.at.least(coupons[i-1].discountPercentage);",
+                  "    }",
+                  "    ",
+                  "    // Verify flats are sorted correctly",
+                  "    for (var i = percentageCount + 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].discountFlatAmount).to.be.at.least(coupons[i-1].discountFlatAmount);",
+                  "    }",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=discountAmount&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "discountAmount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by discountAmount DESC (Grouped: % then $)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Coupons sorted by discount amount descending (percentages first high-to-low, then flats high-to-low)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    ",
+                  "    // Verify all coupons have applicableCoursesCount",
+                  "    coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.a('number');",
+                  "    });",
+                  "    ",
+                  "    // Find the split point between percentage and flat coupons",
+                  "    var percentageCount = 0;",
+                  "    for (var i = 0; i < coupons.length; i++) {",
+                  "        if (coupons[i].discountType === 'percentage') {",
+                  "            percentageCount++;",
+                  "        } else {",
+                  "            break;",
+                  "        }",
+                  "    }",
+                  "    ",
+                  "    // Verify percentages are sorted correctly (descending)",
+                  "    for (var i = 1; i < percentageCount; i++) {",
+                  "        pm.expect(coupons[i].discountPercentage).to.be.at.most(coupons[i-1].discountPercentage);",
+                  "    }",
+                  "    ",
+                  "    // Verify flats are sorted correctly (descending)",
+                  "    for (var i = percentageCount + 1; i < coupons.length; i++) {",
+                  "        pm.expect(coupons[i].discountFlatAmount).to.be.at.most(coupons[i-1].discountFlatAmount);",
+                  "    }",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=discountAmount&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "discountAmount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 Filter Tests",
+      "item": [
+        {
+          "name": "Filter by discountType=flat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All coupons are flat type\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.discountType).to.equal('flat');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?discountType=flat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "discountType",
+                  "value": "flat"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by discountType=percentage",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All coupons are percentage type\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.discountType).to.equal('percentage');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?discountType=percentage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "discountType",
+                  "value": "percentage"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by discountType=all",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All discount types returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.coupons.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?discountType=all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "discountType",
+                  "value": "all"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by applicableCourses dead (specific course)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Get a course ID from the environment or use a test course ID",
+                  "// In a real scenario, you would fetch the first course and use its ID",
+                  "if (!pm.environment.get('courseId')) {",
+                  "    pm.environment.set('courseId', '65a1b2c3d4e5f6g7h8i9j0k1'); // Example course ID",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returned coupons contain the filtered course or are applicable to all courses\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var courseId = pm.environment.get('courseId');",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        var hasCourse = coupon.courses && coupon.courses.length > 0 && coupon.courses.some(function(id) {",
+                  "            return id === courseId || id._id === courseId;",
+                  "        });",
+                  "        var appliesToAll = coupon.courses && coupon.courses.length === 0;",
+                  "        pm.expect(hasCourse || appliesToAll).to.be.true;",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?applicableCourses=68fba46b876dc69d8099a556",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "applicableCourses",
+                  "value": "68fba46b876dc69d8099a556"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by expirationDateFrom",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Date from filter works\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateFrom = new Date('2025-01-01T00:00:00.000Z');",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        var expDate = new Date(coupon.expirationDate);",
+                  "        pm.expect(expDate.getTime()).to.be.at.least(dateFrom.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?expirationDateFrom=2025-01-01T00:00:00.000Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "expirationDateFrom",
+                  "value": "2025-01-01T00:00:00.000Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by expirationDateTo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Date to filter includes entire end date\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateTo = new Date('2025-12-31T23:59:59.999Z');",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        var expDate = new Date(coupon.expirationDate);",
+                  "        pm.expect(expDate.getTime()).to.be.at.most(dateTo.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?expirationDateTo=2025-12-31T23:59:59.999Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "expirationDateTo",
+                  "value": "2025-12-31T23:59:59.999Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by expiration date range",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Date range filter works correctly\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateFrom = new Date('2025-01-01T00:00:00.000Z');",
+                  "    var dateTo = new Date('2025-12-31T23:59:59.999Z');",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        var expDate = new Date(coupon.expirationDate);",
+                  "        pm.expect(expDate.getTime()).to.be.at.least(dateFrom.getTime());",
+                  "        pm.expect(expDate.getTime()).to.be.at.most(dateTo.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?expirationDateFrom=2025-01-01T00:00:00.000Z&expirationDateTo=2025-12-31T23:59:59.999Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "expirationDateFrom",
+                  "value": "2025-01-01T00:00:00.000Z"
+                },
+                {
+                  "key": "expirationDateTo",
+                  "value": "2025-12-31T23:59:59.999Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by applicableCoursesRange=1-3",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All coupons have applicable courses between 1-3\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.at.least(1);",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.at.most(3);",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?applicableCoursesRange=1-3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "applicableCoursesRange",
+                  "value": "1-3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by applicableCoursesRange=4-6",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All coupons have applicable courses between 4-6\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.at.least(4);",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.at.most(6);",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?applicableCoursesRange=4-6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "applicableCoursesRange",
+                  "value": "4-6"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by applicableCoursesRange=7+",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All coupons have 7 or more applicable courses\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.at.least(7);",
+                  "    });",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?applicableCoursesRange=7+",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "applicableCoursesRange",
+                  "value": "7+"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔗 Combined Tests",
+      "item": [
+        {
+          "name": "Sort by timesOfUse DESC + Filter by type flat + Pagination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Complex filters work together\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                  "    jsonData.data.coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.discountType).to.equal('flat');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=timesOfUse&sortOrder=desc&discountType=flat&page=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "timesOfUse"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                },
+                {
+                  "key": "discountType",
+                  "value": "flat"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by name ASC + Filter by date range + Include count",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All parameters work correctly\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=name&sortOrder=asc&expirationDateFrom=2025-01-01T00:00:00.000Z&expirationDateTo=2025-12-31T23:59:59.999Z&includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "name"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                },
+                {
+                  "key": "expirationDateFrom",
+                  "value": "2025-01-01T00:00:00.000Z"
+                },
+                {
+                  "key": "expirationDateTo",
+                  "value": "2025-12-31T23:59:59.999Z"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by discountAmount DESC + Include count + Pagination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Grouped discount sorting with pagination works correctly\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                  "    pm.expect(jsonData.data.pagination.pageSize).to.equal(5);",
+                  "    ",
+                  "    var coupons = jsonData.data.coupons;",
+                  "    ",
+                  "    // Verify all coupons have applicableCoursesCount",
+                  "    coupons.forEach(function(coupon) {",
+                  "        pm.expect(coupon.applicableCoursesCount).to.be.a('number');",
+                  "    });",
+                  "    ",
+                  "    // Verify count information is included",
+                  "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                  "    pm.expect(jsonData.data.pagination.totalPages).to.be.a('number');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/coupons?sortBy=discountAmount&sortOrder=desc&page=1&pageSize=5&includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coupons"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "discountAmount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "5"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "adminEmail",
+      "value": "ykhalifa19921@gmail.com"
+    },
+    {
+      "key": "adminPassword",
+      "value": "P@ssword12"
+    },
+    {
+      "key": "courseId",
+      "value": "68fba46b876dc69d8099a556",
+      "description": "Set this to a valid course ID from your database for testing"
+    }
+  ]
+}

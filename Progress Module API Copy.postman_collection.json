@@ -1,0 +1,2103 @@
+{
+  "info": {
+    "_postman_id": "2fcf1dda-1a2b-45e6-909b-712c5e13cfa7",
+    "name": "Progress Module API Copy",
+    "description": "Complete API collection for Progress Module with lazy-loading endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-2fcf1dda-1a2b-45e6-909b-712c5e13cfa7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Create Progress",
+      "item": [
+        {
+          "name": "Create progress for user (User creating own)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"courseId\": \"68fba466876dc69d8099a4ed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress"
+              ]
+            },
+            "description": "User creates progress for their own course. User ID must match authenticated user."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Get Progress",
+      "item": [
+        {
+          "name": "1. Basic Requests",
+          "item": [
+            {
+              "name": "Get All Progresses (Default)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?includeCount=true",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "includeCount",
+                      "value": "true"
+                    }
+                  ]
+                },
+                "description": "Returns all progresses sorted by creation date descending (newest first)"
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Progresses with Pagination",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?page=1&pageSize=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "20"
+                    }
+                  ]
+                },
+                "description": "Get first page with 20 records per page"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "2. Sorting - Date",
+          "item": [
+            {
+              "name": "Sort by Date - Ascending (Oldest First)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?sortBy=createdAt&sortOrder=asc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                },
+                "description": "Sort by creation date ascending (oldest first)"
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by Date - Descending (Newest First)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?sortBy=createdAt&sortOrder=desc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                },
+                "description": "Sort by creation date descending (newest first)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "3. Sorting - Percentage",
+          "item": [
+            {
+              "name": "Sort by Percentage - Ascending (0% to 100%)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?sortBy=percentage&sortOrder=asc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "percentage"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                },
+                "description": "Sort by completion percentage ascending (0% → 100%)"
+              },
+              "response": []
+            },
+            {
+              "name": "Sort by Percentage - Descending (100% to 0%)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?sortBy=percentage&sortOrder=desc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "sortBy",
+                      "value": "percentage"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                },
+                "description": "Sort by completion percentage descending (100% → 0%)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "4. Filter - Completion Status",
+          "item": [
+            {
+              "name": "Get Only Completed (100%)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?isCompleted=true",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "isCompleted",
+                      "value": "true"
+                    }
+                  ]
+                },
+                "description": "Get only progresses with 100% completion"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Only In-Progress (<100%)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?isCompleted=false",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "isCompleted",
+                      "value": "false"
+                    }
+                  ]
+                },
+                "description": "Get only progresses with <100% completion"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "5. Filter - Percentage Ranges",
+          "item": [
+            {
+              "name": "0-25% Range",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?percentageMin=0&percentageMax=17",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "percentageMin",
+                      "value": "0"
+                    },
+                    {
+                      "key": "percentageMax",
+                      "value": "17"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "26-50% Range",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress/all",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress",
+                    "all"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "51-75% Range",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?percentageMin=51&percentageMax=75",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "percentageMin",
+                      "value": "51"
+                    },
+                    {
+                      "key": "percentageMax",
+                      "value": "75"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "76-99% Range",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?percentageMin=76&percentageMax=100",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "percentageMin",
+                      "value": "76"
+                    },
+                    {
+                      "key": "percentageMax",
+                      "value": "100"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "6. Filter - User & Course",
+          "item": [
+            {
+              "name": "Filter by User ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?userId={{user_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "{{user_id}}"
+                    }
+                  ]
+                },
+                "description": "Get progresses for specific user - replace {{user_id}} with actual user ObjectId"
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by Course ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?courseId={{course_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "courseId",
+                      "value": "{{course_id}}"
+                    }
+                  ]
+                },
+                "description": "Get progresses for specific course - replace {{course_id}} with actual course ObjectId"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "7. Combined Filters & Sorting",
+          "item": [
+            {
+              "name": "In-Progress by Highest Percentage",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?isCompleted=false&sortBy=percentage&sortOrder=desc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "isCompleted",
+                      "value": "false"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "percentage"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                },
+                "description": "Show students close to completing, sorted by highest percentage first"
+              },
+              "response": []
+            },
+            {
+              "name": "Completed Courses - Newest First",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?isCompleted=true&sortBy=createdAt&sortOrder=desc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "isCompleted",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                },
+                "description": "Show recently completed courses"
+              },
+              "response": []
+            },
+            {
+              "name": "User's Mid-Progress Courses",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?userId={{user_id}}&percentageMin=50&percentageMax=75&sortBy=percentage&sortOrder=desc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "{{user_id}}"
+                    },
+                    {
+                      "key": "percentageMin",
+                      "value": "50"
+                    },
+                    {
+                      "key": "percentageMax",
+                      "value": "75"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "percentage"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "desc"
+                    }
+                  ]
+                },
+                "description": "Find specific user's courses in mid-progress range"
+              },
+              "response": []
+            },
+            {
+              "name": "Course Progress - Oldest Enrollments First",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?courseId={{course_id}}&sortBy=createdAt&sortOrder=asc",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "courseId",
+                      "value": "{{course_id}}"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    }
+                  ]
+                },
+                "description": "See who started the course first"
+              },
+              "response": []
+            },
+            {
+              "name": "At-Risk Students - Oldest First",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{admin_token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/progress?percentageMax=25&sortBy=createdAt&sortOrder=asc&pageSize=50",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "progress"
+                  ],
+                  "query": [
+                    {
+                      "key": "percentageMax",
+                      "value": "25"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "50"
+                    }
+                  ]
+                },
+                "description": "Identify at-risk students who started long ago but haven't progressed"
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get progress by ID (Owner/Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}"
+              ]
+            },
+            "description": "Get a specific progress record. User can only view their own unless they're admin."
+          },
+          "response": []
+        },
+        {
+          "name": "Get all progresses (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress?page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get all progress records with pagination. Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Filter all progresses by userId (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress?userId={{user_id}}&page=1&pageSize=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress"
+              ],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{user_id}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Filter all progresses by specific user. Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Get user's progresses (Owner/Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/user/{{user_id}}?page=1&pageSize=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "user",
+                "{{user_id}}"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all progresses for a specific user. User can view own, admin can view any."
+          },
+          "response": []
+        },
+        {
+          "name": "Get progress statistics (Admin only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/statistics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "statistics"
+              ]
+            },
+            "description": "Get aggregated progress statistics. Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "certificate check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/certificate-percentage",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "certificate-percentage"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "recalc all",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/metadata/recalculate-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "metadata",
+                "recalculate-all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get progress by course and user id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/user/68c367d95d4be78f8dcecd96/course/69134c5d8606e82cb669bfdb",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "user",
+                "68c367d95d4be78f8dcecd96",
+                "course",
+                "69134c5d8606e82cb669bfdb"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sync with courses",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/metadata/sync-with-courses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "metadata",
+                "sync-with-courses"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Update Progress",
+      "item": [
+        {
+          "name": "Update progress (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\n//   \"lessonUpdates\": [\n//     {\n//       \"lessonId\": \"692233a03da2e3ed40441b20\",\n//       \"videoWatched\": true,\n//       \"practiceSets\": [\n//         { \"setId\": \"6923b66ef8c3666f31a2e55c\", \"isCompleted\": false }\n//       ]\n//     }\n//   ]\n// }\n// {\n//   \"lastVideoWatched\": \"692233a03da2e3ed40441b20\",\n//   \"lastSection\": \"691767d5bd58dca9fc1a9303\"\n// }\n//or\n\n{\n  \"finalExam\": {\n    \"percentage\": 20\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}"
+              ]
+            },
+            "description": "Update any part of progress. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Delete Progress",
+      "item": [
+        {
+          "name": "Delete progress (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}"
+              ]
+            },
+            "description": "Delete a progress record. Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Lazy-Loading - Initialize Section",
+      "item": [
+        {
+          "name": "Initialize section in progress (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/sections/{{section_id}}/init",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "sections",
+                "{{section_id}}",
+                "init"
+              ]
+            },
+            "description": "Initialize a section and all its lessons with practice sets. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Lazy-Loading - Initialize Lesson",
+      "item": [
+        {
+          "name": "Initialize lesson in progress (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/sections/{{section_id}}/lessons/{{lesson_id}}/init",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "sections",
+                "{{section_id}}",
+                "lessons",
+                "{{lesson_id}}",
+                "init"
+              ]
+            },
+            "description": "Initialize a lesson with its practice sets. Automatically creates parent section if needed. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Lazy-Loading - Initialize Practice Set",
+      "item": [
+        {
+          "name": "Initialize practice set in progress (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/sections/{{section_id}}/lessons/{{lesson_id}}/sets/{{set_id}}/init",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "sections",
+                "{{section_id}}",
+                "lessons",
+                "{{lesson_id}}",
+                "sets",
+                "{{set_id}}",
+                "init"
+              ]
+            },
+            "description": "Initialize a practice set. Automatically creates parent section and lesson if needed. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Update - Lesson Video Watched",
+      "item": [
+        {
+          "name": "Mark lesson video as watched (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"videoWatched\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/sections/{{section_id}}/lessons/{{lesson_id}}/videoCompletion",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "sections",
+                "{{section_id}}",
+                "lessons",
+                "{{lesson_id}}",
+                "videoCompletion"
+              ]
+            },
+            "description": "Update lesson video watched state. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. Update - Practice Set Completion",
+      "item": [
+        {
+          "name": "Mark practice set as completed (Owner/Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isCompleted\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/sections/{{section_id}}/lessons/{{lesson_id}}/sets/{{set_id}}/setCompletion",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "sections",
+                "{{section_id}}",
+                "lessons",
+                "{{lesson_id}}",
+                "sets",
+                "{{set_id}}",
+                "setCompletion"
+              ]
+            },
+            "description": "Mark a practice set as completed. Owner or admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "update final exam to be completed",
+      "item": [
+        {
+          "name": "update final exam",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"isCompleted\":true,\r\n    \"isPassed\":true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/progress/{{progress_id}}/finalExam",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progress_id}}",
+                "finalExam"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "bank reset",
+      "item": [
+        {
+          "name": "reset bank",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bankCompleted\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/progress/{{progressId}}/sections/{{sectionId}}/lessons/{{lessonId}}/sets/bankReset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "progress",
+                "{{progressId}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}",
+                "sets",
+                "bankReset"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "grading",
+      "item": [
+        {
+          "name": "Setup & Variables",
+          "item": [
+            {
+              "name": "Set Admin Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.environment.set('accessToken', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YzM2N2Q5NWQ0YmU3OGY4ZGNlY2Q5NiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NDYzMjIyNiwiZXhwIjoxNzY0NjMzMTI2fQ.PfdOnapE3WrUDYcIzXeMCn1q07jy4HIxS_KlMt47c1Y');"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "MCQ (Multiple Choice)",
+          "item": [
+            {
+              "name": "MCQ - Correct Answer",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"692a0ea6207f777c1efc1153\",\n  \"questionId\": \"692a0ed7207f777c1efc115b\",\n  \"userAnswer\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "MCQ Question: 'What is the primary function of mitochondria in eukaryotic cells?'\nCorrect answer: Index 1 - 'ATP production through cellular respiration'\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "MCQ - Wrong Answer",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"692a0ea6207f777c1efc1153\",\n  \"questionId\": \"692a0ed7207f777c1efc115b\",\n  \"userAnswer\": 0\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "MCQ Question: 'What is the primary function of mitochondria in eukaryotic cells?'\nWrong answer: Index 0 - 'Protein synthesis'\nExpected: isCorrect: false, score: 0"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Flash-Card",
+          "item": [
+            {
+              "name": "Flash-Card - Pair 0 Correct",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"693b02a338d1ca8a9f1606a1\",\n  \"questionId\": \"693b04155f505279e370b790\",\n  \"userAnswer\": \"An organelle in eukaryotic cells that generates ATP through aerobic respiration. Often called the 'powerhouse of the cell'. Contains its own DNA and can reproduce .\",\n  \"pairIndex\": 0\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Flash-Card Question - Pair 0\nFront: Mitochondria\nBack (correct): 'An organelle in eukaryotic cells that generates ATP through aerobic respiration. Often called the powerhouse of the cell. Contains its own DNA and can reproduce independently.'\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "Flash-Card - Pair 1 Correct",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bf89f8c3666f31a2e580\",\n  \"questionId\": \"6923c268f8c3666f31a2e58f\",\n  \"userAnswer\": \"Site of photosynthesis; converts light energy to chemical energy. Contains chlorophyll and thylakoid membranes.\",\n  \"pairIndex\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Flash-Card Question - Pair 1\nFront: Chloroplast\nBack (correct): 'Site of photosynthesis; converts light energy to chemical energy. Contains chlorophyll and thylakoid membranes.'\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "Flash-Card - Wrong Answer",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bf89f8c3666f31a2e580\",\n  \"questionId\": \"6923c268f8c3666f31a2e58f\",\n  \"userAnswer\": \"Wrong definition here\",\n  \"pairIndex\": 0\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Flash-Card Question - Wrong Answer\nFront: Mitochondria\nBack (wrong): 'Wrong definition here'\nExpected: isCorrect: false, score: 0"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Fill-Blank",
+          "item": [
+            {
+              "name": "Fill-Blank - All Correct",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bd0df8c3666f31a2e571\",\n  \"questionId\": \"6923bdf3f8c3666f31a2e578\",\n  \"userAnswer\": {\n    \"1\": \"mitocHondria\",\n    \"2\": \"aTP\",\n    \"3\": \"DnA\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Fill-Blank Question - All Correct\nBlank 1: mitochondria (accepted: mitochondria, mitochondrion, mitochondrial)\nBlank 2: ATP (accepted: ATP, adenosine triphosphate, energy)\nBlank 3: DNA (accepted: DNA, genetic material, chromosomes)\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "Fill-Blank - With Normalization (Uppercase)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bd0df8c3666f31a2e571\",\n  \"questionId\": \"6923bdf3f8c3666f31a2e578\",\n  \"userAnswer\": {\n    \"1\": \"MITOCHONDRIA\",\n    \"2\": \"ATP\",\n    \"3\": \"DNA\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Fill-Blank Question - With Normalization\nTesting case-insensitive matching\nUser answer: \"MITOCHONDRIA\" (uppercase)\nExpected: isCorrect: true, score: 1 (because of normalization)"
+              },
+              "response": []
+            },
+            {
+              "name": "Fill-Blank - With Extra Spaces",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bd0df8c3666f31a2e571\",\n  \"questionId\": \"6923bdf3f8c3666f31a2e578\",\n  \"userAnswer\": {\n    \"1\": \"  mitochondria  \",\n    \"2\": \"atp\",\n    \"3\": \"genetic material\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Fill-Blank Question - With Normalization\nTesting whitespace trimming and case-insensitive matching\nUser answers: \"  mitochondria  \", \"atp\", \"genetic material\"\nExpected: isCorrect: true, score: 1 (because of normalization)"
+              },
+              "response": []
+            },
+            {
+              "name": "Fill-Blank - Partially Wrong",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923bd0df8c3666f31a2e571\",\n  \"questionId\": \"6923bdf3f8c3666f31a2e578\",\n  \"userAnswer\": {\n    \"1\": \"mitochondria\",\n    \"2\": \"WRONG_ANSWER\",\n    \"3\": \"DNA\"\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Fill-Blank Question - Partially Wrong\nOne blank is incorrect\nExpected: isCorrect: false, score: 0 (all blanks must be correct)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Match",
+          "item": [
+            {
+              "name": "Match - All Correct",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923b66ef8c3666f31a2e55c\",\n  \"questionId\": \"6923b897f8c3666f31a2e569\",\n  \"userAnswer\": {\n    \"0\": 0,\n    \"1\": 1,\n    \"2\": 2,\n    \"3\": 3,\n    \"4\": 4,\n    \"5\": 5,\n    \"6\": 6,\n    \"7\": 7,\n    \"8\": 8,\n    \"9\": 9\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Match Question - All Correct\nMatching biological structures with their functions\nCorrect mapping: each item at index i maps to index i\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "Match - Partially Wrong",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923b66ef8c3666f31a2e55c\",\n  \"questionId\": \"6923b897f8c3666f31a2e569\",\n  \"userAnswer\": {\n    \"0\": 1,\n    \"1\": 0,\n    \"2\": 2,\n    \"3\": 3,\n    \"4\": 4,\n    \"5\": 5,\n    \"6\": 6,\n    \"7\": 7,\n    \"8\": 8,\n    \"9\": 9\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Match Question - Partially Wrong\nTwo pairs are swapped (indices 0 and 1)\nExpected: isCorrect: false, score: 0 (all mappings must be correct)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Drag-Drop",
+          "item": [
+            {
+              "name": "Drag-Drop - All Correct",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923c288f8c3666f31a2e597\",\n  \"questionId\": \"6923c515f8c3666f31a2e5a2\",\n  \"userAnswer\": {\n    \"Nucleus\": 1,\n    \"Mitochondria\": 2,\n    \"Ribosome\": 3,\n    \"Endoplasmic Reticulum\": 4,\n    \"Golgi Apparatus\": 5\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Drag-Drop Question - All Correct\nDragging cell organelles to correct positions on cell diagram\nCorrect positions: Nucleus→1, Mitochondria→2, Ribosome→3, ER→4, Golgi→5\nExpected: isCorrect: true, score: 1"
+              },
+              "response": []
+            },
+            {
+              "name": "Drag-Drop - Partially Wrong",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"6923c288f8c3666f31a2e597\",\n  \"questionId\": \"6923c515f8c3666f31a2e5a2\",\n  \"userAnswer\": {\n    \"Nucleus\": 2,\n    \"Mitochondria\": 1,\n    \"Ribosome\": 3,\n    \"Endoplasmic Reticulum\": 4,\n    \"Golgi Apparatus\": 5\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Drag-Drop Question - Partially Wrong\nTwo organelles placed in wrong positions\nExpected: isCorrect: false, score: 0 (all items must be in correct positions)"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Authorization Tests",
+          "item": [
+            {
+              "name": "Grading Without Auth Token",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"692a0ea6207f777c1efc1153\",\n  \"questionId\": \"692a0ed7207f777c1efc115b\",\n  \"userAnswer\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Test authentication requirement\nNo auth token provided\nExpected: 401 - Authentication required"
+              },
+              "response": []
+            },
+            {
+              "name": "Grading With Invalid Token",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken=invalid_token_here",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"setId\": \"692a0ea6207f777c1efc1153\",\n  \"questionId\": \"692a0ed7207f777c1efc115b\",\n  \"userAnswer\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/grade",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "grade"
+                  ]
+                },
+                "description": "Test with invalid token\nExpected: 401 - Invalid or expired token"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get Practice Sets",
+          "item": [
+            {
+              "name": "Get Practice Set by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/692a0ea6207f777c1efc1153",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "692a0ea6207f777c1efc1153"
+                  ]
+                },
+                "description": "Get a specific practice set with all questions"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Practice Sets by Bank",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Cookie",
+                    "value": "accessToken={{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/practice-sets/bank/692233a13da2e3ed40441b23?page=1&pageSize=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "practice-sets",
+                    "bank",
+                    "692233a13da2e3ed40441b23"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Get all practice sets for a specific practice bank"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "user_token",
+      "value": ""
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    },
+    {
+      "key": "another_user_id",
+      "value": ""
+    },
+    {
+      "key": "course_id",
+      "value": ""
+    },
+    {
+      "key": "progress_id",
+      "value": ""
+    },
+    {
+      "key": "section_id",
+      "value": ""
+    },
+    {
+      "key": "lesson_id",
+      "value": ""
+    },
+    {
+      "key": "set_id",
+      "value": ""
+    }
+  ]
+}

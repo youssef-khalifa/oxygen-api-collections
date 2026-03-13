@@ -1,0 +1,443 @@
+{
+  "info": {
+    "_postman_id": "ce6a4935-4cae-43e5-8d80-db24e2e52772",
+    "name": "Placement Test API",
+    "description": "Collection for Placement Test endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-ce6a4935-4cae-43e5-8d80-db24e2e52772?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Public Routes - User Endpoints",
+      "item": [
+        {
+          "name": "Get Placement Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/:language",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                ":language"
+              ],
+              "variable": [
+                {
+                  "key": "language",
+                  "value": "en",
+                  "description": "Language code: en, fr, es, de, it, zh"
+                }
+              ]
+            },
+            "description": "Retrieve a placement test with fully populated practice bank and questions"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Placement Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"score\": 50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/:language/submit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                ":language",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "language",
+                  "value": "en"
+                }
+              ]
+            },
+            "description": "Submit placement test score (0-100). Returns suggested level, course snapshot, and score."
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Result",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/:language/my-results",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                ":language",
+                "my-results"
+              ],
+              "variable": [
+                {
+                  "key": "language",
+                  "value": "en"
+                }
+              ]
+            },
+            "description": "Get user's latest placement test result for a specific language"
+          },
+          "response": []
+        },
+        {
+          "name": "soft delete my result",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/my-result/69af1321d77ace393beac181",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                "my-result",
+                "69af1321d77ace393beac181"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Routes - Test Management",
+      "item": [
+        {
+          "name": "Get All Placement Tests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "en",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests"
+              ]
+            },
+            "description": "Admin: Get all placement tests (requires admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Placement Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language\": \"en\",\n  \"levelRanges\": [\n    {\n      \"minScore\": 0,\n      \"maxScore\": 49,\n      \"level\": \"A1\",\n      \"courses\": [\"{{course_id_1}}\",\"{{course_id_2}}\"]\n    },\n    {\n      \"minScore\": 50,\n      \"maxScore\": 100,\n      \"level\": \"B1\",\n      \"courses\": [\"{{course_id_2}}\"]\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests"
+              ]
+            },
+            "description": "Admin: Create a new placement test for a language with score ranges and suggested courses. Practice bank is created automatically."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Placement Test",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"levelRanges\": [\n    {\n      \"minScore\": 0,\n      \"maxScore\": 49,\n      \"level\": \"A1\",\n      \"courses\": [\"{{course_id_1}}\",\"68fba467876dc69d8099a510\"]\n    }\n    // {\n    //   \"minScore\": 50,\n    //   \"maxScore\": 100,\n    //   \"level\": \"B1\",\n    //   \"course\": \"{{course_id_2}}\"\n    // }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69ae1ce6f4ddb0ff1d75ff14"
+                }
+              ]
+            },
+            "description": "Admin: Update a placement test's level ranges. Practice bank cannot be changed once created."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Placement Test",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69b09101e81dc664aca20771"
+                }
+              ]
+            },
+            "description": "Admin: Delete a placement test"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Results",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/results",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                "results"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete a result",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/result/69ae51877e85d9eb1efa3caa",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                "result",
+                "69ae51877e85d9eb1efa3caa"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Routes - Analytics",
+      "item": [
+        {
+          "name": "Get Placement Test Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/placement-tests/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "placement-tests",
+                "stats"
+              ]
+            },
+            "description": "Admin: Get placement test statistics (count of submissions per language)"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "admin_access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "practice_bank_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "new_practice_bank_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "course_id_1",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "course_id_2",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

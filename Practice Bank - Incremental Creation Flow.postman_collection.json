@@ -1,0 +1,1239 @@
+{
+  "info": {
+    "_postman_id": "f463c22e-4f68-4df8-8538-097b99ec57cc",
+    "name": "Practice Bank - Incremental Creation Flow",
+    "description": "Complete API collection for practice bank and practice set management with incremental creation. Demonstrates all 5 question types with proper request bodies and realistic data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-f463c22e-4f68-4df8-8538-097b99ec57cc?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "2. UPLOAD - Media Files (Images & Audio)",
+      "item": [
+        {
+          "name": "Upload Context Media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "upload"
+              ]
+            },
+            "description": "Upload media files (images, audio). Returns media IDs to use in practice set creation.\n\nResponse:\n```json\n{\n  \"media\": [\n    {\n      \"id\": \"media_abc123\",\n      \"filename\": \"diagram.jpg\",\n      \"category\": \"images\",\n      \"url\": \"https://s3.../media_abc123.jpg\"\n    }\n  ]\n}\n```\n\nCopy the media IDs and use them in the practice set requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Question Media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/media/upload",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "media",
+                "upload"
+              ]
+            },
+            "description": "Upload media for questions (images, audio files). Save the returned media IDs for use in question bodies."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. MCQ - Multiple Choice Questions",
+      "item": [
+        {
+          "name": "3.1 Create Empty MCQ Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('mcq_set_id', data.id);",
+                  "  console.log('✓ MCQ set created:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bankId\": \"{{bank_id}}\",\n  \"questionType\": \"mcq\",\n  \"title\": \"mcq Exercise\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets"
+              ]
+            },
+            "description": "Create an empty MCQ practice set. Questions and context are added incrementally."
+          },
+          "response": []
+        },
+        {
+          "name": "3.2 Add Context to MCQ Set",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\":\"hello\",\n  \"context\": {\n    \"text\": \"\",\n    \"media\": []\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{mcq_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{mcq_set_id}}"
+              ]
+            },
+            "description": "Add context/instructions to the MCQ set. Context can include text and media IDs from uploaded files."
+          },
+          "response": []
+        },
+        {
+          "name": "3.3 Add MCQ Question #1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('mcq_q1_id', data.id);",
+                  "  console.log('✓ Question added:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"What is the primary function of mitochondria in eukaryotic cells?\",\n    \"media\": []\n  },\n  \"options\": [\n    {\n      \"content\": {\n        \"text\": \"Protein synthesis\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    },\n    {\n      \"content\": {\n        \"text\": \"ATP production through cellular respiration\",\n        \"media\": []\n      },\n      \"isCorrect\": true\n    },\n    {\n      \"content\": {\n        \"text\": \"DNA replication\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    },\n    {\n      \"content\": {\n        \"text\": \"Photosynthesis\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    }\n  ],\n  \"setId\": \"{{mcq_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions"
+              ]
+            },
+            "description": "Add a single MCQ question. Each option can have text and/or media. Exactly one option must have isCorrect=true."
+          },
+          "response": []
+        },
+        {
+          "name": "3.4 Add MCQ Question #2 (with audio)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"Listen to the audio clip and identify the biological term pronounced\",\n    \"media\": [\n      \"68fd7c9f117e7c21ed258f86\",\"6918bdd4d7b4f9894d25a5d6\"\n    ]\n  },\n  \"options\": [\n    {\n      \"content\": {\n        \"text\": \"Photosynthesis\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\",\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"isCorrect\": true\n    },\n    {\n      \"content\": {\n        \"text\": \"Mitochondria\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    },\n    {\n      \"content\": {\n        \"text\": \"Ribosome\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    },\n    {\n      \"content\": {\n        \"text\": \"Enzyme catalysis\",\n        \"media\": []\n      },\n      \"isCorrect\": false\n    }\n  ],\n  \"setId\": \"{{mcq_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions"
+              ]
+            },
+            "description": "MCQ with audio media. Replace media IDs with actual IDs from upload step."
+          },
+          "response": []
+        },
+        {
+          "name": "3.5 Edit MCQ Question #1",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"What is the PRIMARY function of mitochondria in eukaryotic cells?\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\",\"68fd7c9f117e7c21ed258f86\"]\n  }\n  \n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{mcq_set_id}}/questions/{{mcq_q1_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{mcq_set_id}}",
+                "questions",
+                "{{mcq_q1_id}}"
+              ]
+            },
+            "description": "Update an existing question with improved text or options."
+          },
+          "response": []
+        },
+        {
+          "name": "3.6 View MCQ Set",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{mcq_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{mcq_set_id}}"
+              ]
+            },
+            "description": "Retrieve the complete MCQ practice set with all questions and context."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. MATCH - Matching Questions",
+      "item": [
+        {
+          "name": "4.1 Create Empty Match Set (REQUIRES CONTEXT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('match_set_id', data.id);",
+                  "  console.log('✓ Match set created:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bankId\": \"{{bank_id}}\",\n  \"questionType\": \"match\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets"
+              ]
+            },
+            "description": "Create empty match set. Note: Match questions REQUIRE context to be set before adding questions."
+          },
+          "response": []
+        },
+        {
+          "name": "4.2 Add Context to Match Set (MANDATORY)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"text\": \"PART B: MATCHING (15 points)\\n\\nMatch each biological structure or process on the left (Column A) with its correct function or definition on the right (Column B). Write the letter of the correct answer on the line provided. Each correct match is worth 1.5 points.\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{match_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{match_set_id}}"
+              ]
+            },
+            "description": "IMPORTANT: Context MUST be added before creating match questions. This is a validation requirement."
+          },
+          "response": []
+        },
+        {
+          "name": "4.3 Add Match Question with 10 Pairs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('match_q_id', data.id);",
+                  "  console.log('✓ Match question added:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pairs\": [\n    {\n      \"first\": {\n        \"text\": \"Mitochondria\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Produces ATP through aerobic cellular respiration\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Chloroplast\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Site of photosynthesis; converts light energy to chemical energy\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Ribosome\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Organelle where protein synthesis (translation) occurs\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Nucleus\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Contains genetic material (DNA) and controls cell activities\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Endoplasmic Reticulum (Rough)\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Synthesis of proteins; ribosomes attached to membrane\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Golgi Apparatus\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Modifies, packages, and ships proteins and lipids\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Lysosome\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Contains digestive enzymes; breaks down waste materials\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Cell Membrane\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Selectively permeable barrier controlling what enters/exits cell\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Cytoplasm\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Gel-like substance containing organelles and facilitating metabolism\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    },\n    {\n      \"first\": {\n        \"text\": \"Vacuole\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"second\": {\n        \"text\": \"Storage organelle for water, nutrients, and waste in plant cells\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      }\n    }\n  ],\n  \"setId\": \"{{match_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions"
+              ]
+            },
+            "description": "Match question with 10 pairs. Each pair has 'first' and 'second' items. Both can have text and media."
+          },
+          "response": []
+        },
+        {
+          "name": "4.4 View Match Set",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{match_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{match_set_id}}"
+              ]
+            },
+            "description": "Retrieve the complete match practice set with all pairs."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. FILL-BLANK - Fill in the Blank Questions",
+      "item": [
+        {
+          "name": "5.1 Create Empty Fill-Blank Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('fillblank_set_id', data.id);",
+                  "  console.log('✓ Fill-blank set created:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bankId\": \"{{bank_id}}\",\n  \"questionType\": \"fill-blank\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets"
+              ]
+            },
+            "description": "Create empty fill-blank set."
+          },
+          "response": []
+        },
+        {
+          "name": "5.2 Add Context to Fill-Blank Set",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"text\": \"PART C: SHORT ANSWER / FILL IN THE BLANK (15 points)\\n\\nComplete each statement using the correct biological term. Spelling must be correct. Each blank is worth 1.5 points.\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{fillblank_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{fillblank_set_id}}"
+              ]
+            },
+            "description": "Add context/instructions for fill-blank questions."
+          },
+          "response": []
+        },
+        {
+          "name": "5.3 Add Fill-Blank Question",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('fillblank_q_id', data.id);",
+                  "  console.log('✓ Fill-blank question added:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"The ________ is the powerhouse of the cell, where ________ is produced through aerobic respiration. This organelle contains its own ________ and can reproduce independently, suggesting an evolutionary origin from symbiotic bacteria.\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n  },\n  \"blanks\": [\n    {\n      \"position\": 1,\n      \"acceptedAnswers\": [\n        \"mitochondria\",\n        \"mitochondrion\",\n        \"mitochondrial\"\n      ]\n    },\n    {\n      \"position\": 2,\n      \"acceptedAnswers\": [\n        \"ATP\",\n        \"adenosine triphosphate\",\n        \"energy\"\n      ]\n    },\n    {\n      \"position\": 3,\n      \"acceptedAnswers\": [\n        \"DNA\",\n        \"genetic material\",\n        \"chromosomes\"\n      ]\n    }\n  ],\n  \"setId\": \"{{fillblank_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions"
+              ]
+            },
+            "description": "Fill-blank question. Blanks are referenced by position numbers. Each blank has accepted answers for grading."
+          },
+          "response": []
+        },
+        {
+          "name": "5.4 View Fill-Blank Set",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{fillblank_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{fillblank_set_id}}"
+              ]
+            },
+            "description": "Retrieve the fill-blank practice set."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. FLASH-CARD - Flash Card Questions (REQUIRES CONTEXT)",
+      "item": [
+        {
+          "name": "6.1 Create Empty Flash-Card Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('flashcard_set_id', data.id);",
+                  "  console.log('✓ Flash-card set created:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\":\"flash card text back test\",\n  \"bankId\": \"692233a13da2e3ed40441b23\",\n  \"questionType\": \"flash-card\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets"
+              ]
+            },
+            "description": "Create empty flash-card set. Note: Flash-card questions REQUIRE context to be set."
+          },
+          "response": []
+        },
+        {
+          "name": "6.2 Add Context to Flash-Card Set (MANDATORY)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"text\": \"STUDY GUIDE: Biology Vocabulary Flash Cards\\n\\nTest your knowledge of key biological terms and concepts. Front shows the term, back shows the definition. Click to reveal the answer.\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{flashcard_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{flashcard_set_id}}"
+              ]
+            },
+            "description": "IMPORTANT: Context MUST be added before creating flash-card questions."
+          },
+          "response": []
+        },
+        {
+          "name": "6.3 Add Flash-Card #1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('flashcard_q1_id', data.id);",
+                  "  console.log('✓ Flash-card added:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pairs\": [\n    {\n      \"front\": {\n        \"text\": \"Mitochondria\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"back\": \"An organelle in eukaryotic cells that generates ATP through aerobic respiration. Often called the 'powerhouse of the cell'. Contains its own DNA and can reproduce independently.\"\n    },\n    {\n      \"front\": {\n        \"text\": \"Chloroplast\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"back\": \"Site of photosynthesis; converts light energy to chemical energy. Contains chlorophyll and thylakoid membranes.\"\n    },\n    {\n      \"front\": {\n        \"text\": \"Ribosome\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"back\": \"Organelle where protein synthesis (translation) occurs. Can be free-floating or attached to rough endoplasmic reticulum.\"\n    },\n    {\n      \"front\": {\n        \"text\": \"Nucleus\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"back\": \"Contains genetic material (DNA) and controls cell activities through gene expression and regulation.\"\n    },\n    {\n      \"front\": {\n        \"text\": \"Endoplasmic Reticulum (Rough)\",\n        \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n      },\n      \"back\": \"Synthesis of proteins; ribosomes are attached to the membrane giving it a rough appearance.\"\n    }\n  ],\n  \"setId\": \"{{flashcard_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions",
+                ""
+              ]
+            },
+            "description": "Flash-card with front (question) and back (answer). Each can include text and/or media."
+          },
+          "response": []
+        },
+        {
+          "name": "6.6 View Flash-Card Set",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{flashcard_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{flashcard_set_id}}"
+              ]
+            },
+            "description": "Retrieve the flash-card practice set with all cards."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. DRAG-DROP - Drag and Drop Questions",
+      "item": [
+        {
+          "name": "7.1 Create Empty Drag-Drop Set",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('dragdrop_set_id', data.id);",
+                  "  console.log('✓ Drag-drop set created:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bankId\": \"{{bank_id}}\",\n  \"questionType\": \"drag-drop\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets"
+              ]
+            },
+            "description": "Create empty drag-drop set."
+          },
+          "response": []
+        },
+        {
+          "name": "7.2 Add Context to Drag-Drop Set",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"text\": \"PART D: DRAG AND DROP (10 points)\\n\\nDrag the labels to their correct positions on the cell diagram. Each correct label placement is worth 2 points.\",\n    \"media\": [\"68fd7c9f117e7c21ed258f86\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{dragdrop_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{dragdrop_set_id}}"
+              ]
+            },
+            "description": "Add context with diagram image. Replace media ID with actual ID from upload."
+          },
+          "response": []
+        },
+        {
+          "name": "7.3 Add Drag-Drop Question",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('dragdrop_q_id', data.id);",
+                  "  console.log('✓ Drag-drop question added:', data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"Label the parts of the eukaryotic cell\",\n    \"media\": []\n  },\n  \"pairs\": [\n    {\n      \"draggable\": \"Nucleus\",\n      \"correctPosition\": 1\n    },\n    {\n      \"draggable\": \"Mitochondria\",\n      \"correctPosition\": 2\n    },\n    {\n      \"draggable\": \"Ribosome\",\n      \"correctPosition\": 3\n    },\n    {\n      \"draggable\": \"Endoplasmic Reticulum\",\n      \"correctPosition\": 4\n    },\n    {\n      \"draggable\": \"Golgi Apparatus\",\n      \"correctPosition\": 5\n    }\n  ],\n  \"setId\": \"{{dragdrop_set_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/practice-sets/questions",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "questions"
+              ]
+            },
+            "description": "Drag-drop question. Each option has a position number indicating where it should be dropped on the diagram."
+          },
+          "response": []
+        },
+        {
+          "name": "7.4 View Drag-Drop Set",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{dragdrop_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{dragdrop_set_id}}"
+              ]
+            },
+            "description": "Retrieve the drag-drop practice set."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. MANAGEMENT - View & Delete",
+      "item": [
+        {
+          "name": "8.1 List All Practice Sets in Bank",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/bank/{{bank_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "bank",
+                "{{bank_id}}"
+              ]
+            },
+            "description": "List all practice sets for a given bank with pagination."
+          },
+          "response": []
+        },
+        {
+          "name": "8.2 Get Practice Bank Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-banks/{{bank_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-banks",
+                "{{bank_id}}"
+              ]
+            },
+            "description": "Get complete bank details including all practice sets."
+          },
+          "response": []
+        },
+        {
+          "name": "8.3 Delete MCQ Question",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{mcq_set_id}}/questions/{{mcq_q1_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{mcq_set_id}}",
+                "questions",
+                "{{mcq_q1_id}}"
+              ]
+            },
+            "description": "Remove a single question from a practice set."
+          },
+          "response": []
+        },
+        {
+          "name": "8.4 Delete Practice Set",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-sets/{{mcq_set_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-sets",
+                "{{mcq_set_id}}"
+              ]
+            },
+            "description": "Delete entire practice set and remove it from the bank."
+          },
+          "response": []
+        },
+        {
+          "name": "8.5 Delete Practice Bank",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/practice-banks/{{bank_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "practice-banks",
+                "{{bank_id}}"
+              ]
+            },
+            "description": "Delete entire practice bank and all its practice sets (cascading delete)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. SETUP - Create Practice Bank",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  const data = pm.response.json();",
+              "  pm.environment.set('bank_id', data.id);",
+              "  console.log('✓ Bank created:', data.id);",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{admin_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{base_url}}/practice-banks",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "practice-banks"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

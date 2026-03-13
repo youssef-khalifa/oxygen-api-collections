@@ -1,0 +1,39 @@
+{
+  "info": {
+    "_postman_id": "5b871c36-b39b-4648-a5e6-58c3c5fde181",
+    "name": "contact",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-5b871c36-b39b-4648-a5e6-58c3c5fde181?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "contact us",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"fullName\": \"John Doe\",\r\n  \"email\": \"john@example.com\",\r\n  \"phone\": \"1126576165\",\r\n  \"message\": \"I would like to inquire about your courses and pricing options. Please contact me with more information.hello user.email  $ne \"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/contact",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "contact"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

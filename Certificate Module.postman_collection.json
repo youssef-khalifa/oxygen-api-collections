@@ -1,0 +1,302 @@
+{
+  "info": {
+    "_postman_id": "f56fc6d4-78d2-4c43-b0db-af3efb491665",
+    "name": "Certificate Module",
+    "description": "Oxygen LMS - Certificate Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-f56fc6d4-78d2-4c43-b0db-af3efb491665?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Issue Certificate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"69595ba76f9795bca558556a\",\n  \"courseId\": \"69134c5d8606e82cb669bfdb\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/issue",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "issue"
+          ]
+        },
+        "description": "Issue a certificate for a student (owner-or-admin)\nRequires the student to have completed the course (80% minimum)"
+      },
+      "response": []
+    },
+    {
+      "name": "get certificate by user and course ids",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/user/69595ba76f9795bca558556a/course/69134c5d8606e82cb669bfdb",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "user",
+            "69595ba76f9795bca558556a",
+            "course",
+            "69134c5d8606e82cb669bfdb"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Certificates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/user/{{userId}}?page=1&pageSize=20",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "user",
+            "{{userId}}"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "20"
+            },
+            {
+              "key": "courseId",
+              "value": "{{courseId}}",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "Get all certificates for a user (owner-or-admin)\nSupports optional courseId filter and pagination"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Certificate Details",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/{{certificateId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "{{certificateId}}"
+          ]
+        },
+        "description": "Get certificate details (owner-or-admin)"
+      },
+      "response": []
+    },
+    {
+      "name": "Verify Certificate (Public)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/verify/{{certificateId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "verify",
+            "{{certificateId}}"
+          ]
+        },
+        "description": "Verify certificate authenticity (PUBLIC endpoint - no auth required)\nReturns certificate details if valid and hash matches\nReturns error if certificate has been tampered with"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Certificate",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/{{certificateId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "{{certificateId}}"
+          ]
+        },
+        "description": "Delete certificate (admin only)\nRemoves both database record and S3 PDF"
+      },
+      "response": []
+    },
+    {
+      "name": "Regenerate Certificate PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates/{{certificateId}}/regenerate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates",
+            "{{certificateId}}",
+            "regenerate"
+          ]
+        },
+        "description": "Regenerate certificate PDF (admin only)\nClears S3 cache, will regenerate on next download"
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Certificates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/certificates?page=1&pageSize=20&userId={{userId}}&courseId={{courseId}}&issueDateFrom=2026-01-01T00:00:00Z&issueDateTo=2026-12-31T23:59:59Z",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "certificates"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "20"
+            },
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            },
+            {
+              "key": "courseId",
+              "value": "{{courseId}}"
+            },
+            {
+              "key": "issueDateFrom",
+              "value": "2026-01-01T00:00:00Z"
+            },
+            {
+              "key": "issueDateTo",
+              "value": "2026-12-31T23:59:59Z"
+            }
+          ]
+        },
+        "description": "Get all certificates (admin only)\nSupports filtering by userId, courseId, and date range\nSupports pagination"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "certificateId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

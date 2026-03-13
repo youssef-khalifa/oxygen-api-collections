@@ -1,0 +1,1267 @@
+{
+  "info": {
+    "_postman_id": "51f88441-a32d-48ff-84cf-d0ad2296a0e6",
+    "name": "Oxygen Academy - Orders Sort & Filter",
+    "description": "Comprehensive test suite for the Orders module including basic retrieval, sorting, filtering, pagination, and combined scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32978827",
+    "_collection_link": "https://go.postman.co/collection/32978827-51f88441-a32d-48ff-84cf-d0ad2296a0e6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "📋 Basic Retrieval",
+      "item": [
+        {
+          "name": "Get All Orders (Default)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response structure is valid\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.success).to.be.true;",
+                  "    pm.expect(jsonData.data.orders).to.be.an('array');",
+                  "    pm.expect(jsonData.data.pagination).to.be.an('object');",
+                  "});",
+                  "",
+                  "pm.test(\"Default sorting is by createdAt descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.data.orders.length > 1) {",
+                  "        var first = new Date(jsonData.data.orders[0].createdAt);",
+                  "        var second = new Date(jsonData.data.orders[1].createdAt);",
+                  "        pm.expect(first.getTime()).to.be.at.least(second.getTime());",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders (Page 1, PageSize 5)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Pagination is correct\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                  "    pm.expect(jsonData.data.pagination.pageSize).to.equal(5);",
+                  "    pm.expect(jsonData.data.orders.length).to.be.at.most(5);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?page=1&pageSize=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders (Page 2, PageSize 10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Second page retrieved\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(2);",
+                  "    pm.expect(jsonData.data.pagination.pageSize).to.equal(10);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?page=2&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders (With Include Count)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Include count parameter works\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                  "    pm.expect(jsonData.data.pagination.totalPages).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders (Without Include Count)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response without count is faster\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.orders).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?includeCount=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "includeCount",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "order stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/statistics?user=68c367d95d4be78f8dcecd96",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "statistics"
+              ],
+              "query": [
+                {
+                  "key": "user",
+                  "value": "68c367d95d4be78f8dcecd96"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔤 Sort Tests",
+      "item": [
+        {
+          "name": "Sort by orderNumber ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by orderNumber ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        pm.expect(orders[i].orderNumber).to.be.at.least(orders[i-1].orderNumber);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=orderNumber&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "orderNumber"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by orderNumber DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by orderNumber descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        pm.expect(orders[i].orderNumber).to.be.at.most(orders[i-1].orderNumber);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=orderNumber&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "orderNumber"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by createdAt ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by createdAt ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        var date1 = new Date(orders[i].createdAt);",
+                  "        var date2 = new Date(orders[i-1].createdAt);",
+                  "        pm.expect(date1.getTime()).to.be.at.least(date2.getTime());",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=createdAt&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by createdAt DESC (Default)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by createdAt descending (newest first)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        var date1 = new Date(orders[i].createdAt);",
+                  "        var date2 = new Date(orders[i-1].createdAt);",
+                  "        pm.expect(date1.getTime()).to.be.at.most(date2.getTime());",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=createdAt&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by totalAmount ASC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by totalAmount ascending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        pm.expect(orders[i].totalAmount).to.be.at.least(orders[i-1].totalAmount);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=totalAmount&sortOrder=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "totalAmount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by totalAmount DESC",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders sorted by totalAmount descending\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        pm.expect(orders[i].totalAmount).to.be.at.most(orders[i-1].totalAmount);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=totalAmount&sortOrder=desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "totalAmount"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 Filter Tests",
+      "item": [
+        {
+          "name": "Filter by paymentStatus=completed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All orders are completed\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.orders.forEach(function(order) {",
+                  "        pm.expect(order.paymentStatus).to.equal('completed');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders?paymentStatus=completed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "paymentStatus",
+                  "value": "completed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by paymentStatus=refunded",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All orders are refunded\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    jsonData.data.orders.forEach(function(order) {",
+                  "        pm.expect(order.paymentStatus).to.equal('refunded');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?course=690e200c72fe47c9c2bb5d04&paymentStatus=completed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "course",
+                  "value": "690e200c72fe47c9c2bb5d04"
+                },
+                {
+                  "key": "paymentStatus",
+                  "value": "completed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by paymentStatus=all",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All statuses are returned\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.orders.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?paymentStatus=all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "paymentStatus",
+                  "value": "all"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by dateFrom",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All orders are after dateFrom\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateFrom = new Date('2025-10-01T00:00:00.000Z');",
+                  "    jsonData.data.orders.forEach(function(order) {",
+                  "        var orderDate = new Date(order.createdAt);",
+                  "        pm.expect(orderDate.getTime()).to.be.at.least(dateFrom.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?dateFrom=2025-10-01T00:00:00.000Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "dateFrom",
+                  "value": "2025-10-01T00:00:00.000Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by dateTo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All orders are before dateTo (inclusive)\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateTo = new Date('2025-10-31T23:59:59.999Z');",
+                  "    jsonData.data.orders.forEach(function(order) {",
+                  "        var orderDate = new Date(order.createdAt);",
+                  "        pm.expect(orderDate.getTime()).to.be.at.most(dateTo.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?dateTo=2025-10-31T23:59:59.999Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "dateTo",
+                  "value": "2025-10-31T23:59:59.999Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by date range (dateFrom and dateTo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All orders are within date range\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var dateFrom = new Date('2025-10-01T00:00:00.000Z');",
+                  "    var dateTo = new Date('2025-10-31T23:59:59.999Z');",
+                  "    jsonData.data.orders.forEach(function(order) {",
+                  "        var orderDate = new Date(order.createdAt);",
+                  "        pm.expect(orderDate.getTime()).to.be.at.least(dateFrom.getTime());",
+                  "        pm.expect(orderDate.getTime()).to.be.at.most(dateTo.getTime());",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?dateFrom=2025-10-01T00:00:00.000Z&dateTo=2025-10-31T23:59:59.999Z",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "dateFrom",
+                  "value": "2025-10-01T00:00:00.000Z"
+                },
+                {
+                  "key": "dateTo",
+                  "value": "2025-10-31T23:59:59.999Z"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "filter by couponId",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?coupon=68fbb03c4261e9293d3e44b6&includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "coupon",
+                  "value": "68fbb03c4261e9293d3e44b6"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔗 Combined Tests",
+      "item": [
+        {
+          "name": "Sort by totalAmount DESC + Filter by status completed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Orders are sorted and filtered correctly\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var orders = jsonData.data.orders;",
+                  "    ",
+                  "    // Check filtering",
+                  "    orders.forEach(function(order) {",
+                  "        pm.expect(order.paymentStatus).to.equal('completed');",
+                  "    });",
+                  "    ",
+                  "    // Check sorting",
+                  "    for (var i = 1; i < orders.length; i++) {",
+                  "        pm.expect(orders[i].totalAmount).to.be.at.most(orders[i-1].totalAmount);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?paymentStatus=completed&course=68fba479876dc69d8099a66e",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "paymentStatus",
+                  "value": "completed"
+                },
+                {
+                  "key": "course",
+                  "value": "68fba479876dc69d8099a66e"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by orderNumber ASC + Filter by date range + Pagination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Complex filter with sort and pagination works\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.currentPage).to.equal(1);",
+                  "    pm.expect(jsonData.data.pagination.pageSize).to.equal(5);",
+                  "    pm.expect(jsonData.data.orders.length).to.be.at.most(5);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=orderNumber&sortOrder=asc&dateFrom=2025-10-01T00:00:00.000Z&dateTo=2025-10-31T23:59:59.999Z&page=1&pageSize=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "orderNumber"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc"
+                },
+                {
+                  "key": "dateFrom",
+                  "value": "2025-10-01T00:00:00.000Z"
+                },
+                {
+                  "key": "dateTo",
+                  "value": "2025-10-31T23:59:59.999Z"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort by createdAt DESC + Filter by status + With count",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Count information is included\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.pagination.totalItems).to.be.a('number');",
+                  "    pm.expect(jsonData.data.pagination.totalPages).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/orders/all?sortBy=createdAt&sortOrder=desc&paymentStatus=completed&includeCount=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "createdAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                },
+                {
+                  "key": "paymentStatus",
+                  "value": "completed"
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "adminEmail",
+      "value": "ykhalifa19921@gmail.com",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "P@ssword12",
+      "type": "string"
+    }
+  ]
+}
